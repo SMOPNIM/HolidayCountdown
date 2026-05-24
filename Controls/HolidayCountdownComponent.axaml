@@ -13,6 +13,7 @@
         VerticalAlignment="Center">
     <TextBlock Name="PartDisplayText"
                Text="{Binding DisplayText, Mode=OneWay}"
+               FontSize="{Binding Settings.FontSize}"
                VerticalAlignment="Center"
                TextWrapping="NoWrap" />
   </Grid>

@@ -86,7 +86,18 @@ public partial class HolidayCountdownComponent : ComponentBase<HolidayCountdownS
         if (string.IsNullOrWhiteSpace(fmt))
             fmt = "距离 %N 还有 %D天 %H小时%M分";
 
-        DisplayText = fmt
+        if (Settings.IsCompactMode)
+        {
+            fmt = "%N%n";
+            DisplayText = fmt
+                .Replace("%N", next.Name)
+                .Replace("%n", delta.TotalDays >= 1
+                    ? $" {Math.Ceiling(delta.TotalDays)}天"
+                    : $" {Math.Ceiling(delta.TotalHours)}小时");
+            return;
+        }
+
+        var resolved = fmt
             .Replace("%N", next.Name)
             .Replace("%D", Math.Ceiling(delta.TotalDays).ToString(CultureInfo.InvariantCulture))
             .Replace("%H", Math.Ceiling(delta.TotalHours).ToString(CultureInfo.InvariantCulture))
@@ -96,6 +107,18 @@ public partial class HolidayCountdownComponent : ComponentBase<HolidayCountdownS
             .Replace("%h", delta.Hours.ToString("00", CultureInfo.InvariantCulture))
             .Replace("%m", delta.Minutes.ToString("00", CultureInfo.InvariantCulture))
             .Replace("%s", delta.Seconds.ToString("00", CultureInfo.InvariantCulture));
+
+        if (!Settings.ShowSeconds)
+        {
+            var secIdx = resolved.LastIndexOf("秒", StringComparison.Ordinal);
+            if (secIdx > 0)
+            {
+                var cut = resolved.LastIndexOf(' ', secIdx - 1);
+                resolved = cut > 0 ? resolved[..cut] : resolved;
+            }
+        }
+
+        DisplayText = resolved;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
