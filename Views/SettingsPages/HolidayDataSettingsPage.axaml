@@ -1,0 +1,82 @@
+<ci:SettingsPageBase x:Class="HolidayCountdown.Views.SettingsPages.HolidayDataSettingsPage"
+                      xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:ci="http://classisland.tech/schemas/xaml/core"
+                      xmlns:local="clr-namespace:HolidayCountdown.Views.SettingsPages"
+                      mc:Ignorable="d"
+                      d:DesignHeight="600" d:DesignWidth="800"
+                      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                      Background="{DynamicResource MaterialDesignPaper}"
+                      FontFamily="{StaticResource HarmonyOsSans}"
+                      TextElement.FontWeight="Regular"
+                      TextElement.FontSize="14"
+                      TextOptions.TextFormattingMode="Ideal"
+                      TextOptions.TextRenderingMode="Auto">
+  <Grid RowDefinitions="Auto,*,Auto" Margin="16">
+    <!-- 数据源配置 -->
+    <StackPanel Grid.Row="0" Spacing="8">
+      <TextBlock Text="节假日数据管理" FontSize="20" FontWeight="Bold" />
+
+      <WrapPanel Spacing="8">
+        <TextBlock Text="数据源：" VerticalAlignment="Center" />
+        <ComboBox Name="DataSourceCombo"
+                  SelectedIndex="{Binding DataSourceIndex}"
+                  Width="150">
+          <ComboBoxItem>仅本地</ComboBoxItem>
+          <ComboBoxItem>GitHub</ComboBoxItem>
+          <ComboBoxItem>API</ComboBoxItem>
+          <ComboBoxItem>Both（API优先）</ComboBoxItem>
+        </ComboBox>
+      </WrapPanel>
+
+      <WrapPanel Spacing="8" IsVisible="{Binding #DataSourceCombo.SelectedIndex, Converter={x:Static ci:ObjectConverters.GreaterThan}, ConverterParameter=0}">
+        <TextBlock Text="GitHub URL：" VerticalAlignment="Center" />
+        <TextBox Name="GitHubUrlBox" Watermark="https://raw.githubusercontent.com/..." Width="400" />
+      </WrapPanel>
+
+      <WrapPanel Spacing="8" IsVisible="{Binding #DataSourceCombo.SelectedIndex, Converter={x:Static ci:ObjectConverters.GreaterThan}, ConverterParameter=1}">
+        <TextBlock Text="API URL：" VerticalAlignment="Center" />
+        <TextBox Name="ApiUrlBox" Watermark="https://api.example.com/holidays" Width="400" />
+      </WrapPanel>
+
+      <WrapPanel Spacing="8">
+        <Button Name="BtnRefresh" Classes="Accent" Click="BtnRefresh_OnClick">
+          <TextBlock Text="立即更新" />
+        </Button>
+        <Button Name="BtnReset" Click="BtnReset_OnClick">
+          <TextBlock Text="恢复默认" />
+        </Button>
+      </WrapPanel>
+
+      <TextBlock Name="StatusText" FontSize="12" Opacity="0.6" />
+    </StackPanel>
+
+    <!-- 节假日列表 -->
+    <ScrollViewer Grid.Row="1" Margin="0 16">
+      <ItemsControl Name="HolidayList" ItemsSource="{Binding Holidays}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Border BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0 0 0 1" Padding="8 4">
+              <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" ColumnGap="8">
+                <TextBlock Grid.Column="0" Text="{Binding Date, StringFormat='{0:yyyy-MM-dd}'}" Width="100" />
+                <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="Bold" />
+                <TextBlock Grid.Column="2" Text="{Binding Description}" Opacity="0.6" />
+                <Button Grid.Column="3" Content="编辑" />
+                <Button Grid.Column="4" Content="删除" />
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+
+    <!-- 添加节假日 -->
+    <StackPanel Grid.Row="2" Spacing="8" Orientation="Horizontal">
+      <Button Name="BtnAddHoliday" Click="BtnAddHoliday_OnClick">
+        <TextBlock Text="+ 添加节假日" />
+      </Button>
+    </StackPanel>
+  </Grid>
+</ci:SettingsPageBase>

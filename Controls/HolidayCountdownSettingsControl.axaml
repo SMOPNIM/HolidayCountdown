@@ -1,0 +1,41 @@
+<ci:ComponentBase x:TypeArguments="models:HolidayCountdownSettings"
+                  x:Class="HolidayCountdown.Controls.HolidayCountdownSettingsControl"
+                  xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:ci="http://classisland.tech/schemas/xaml/core"
+                  xmlns:models="clr-namespace:HolidayCountdown.Models"
+                  mc:Ignorable="d"
+                  d:DesignHeight="300" d:DesignWidth="500">
+  <StackPanel Spacing="8" Margin="16">
+    <TextBlock Text="显示格式" FontWeight="Bold" />
+    <TextBox Text="{Binding Settings.CustomFormat}" Watermark="距离 %N 还有 %D天 %H小时%M分" />
+
+    <TextBlock Text="可用占位符" FontWeight="Bold" />
+    <TextBlock Text="%N - 节日名称 | %D - 总天数 | %H - 总小时 | %M - 总分 | %S - 总秒" 
+               TextWrapping="Wrap" FontSize="12" Opacity="0.7" />
+    <TextBlock Text="%d - 天 | %h - 小时(00) | %m - 分(00) | %s - 秒(00)"
+               TextWrapping="Wrap" FontSize="12" Opacity="0.7" />
+
+    <Separator Margin="0 8" />
+
+    <CheckBox IsChecked="{Binding Settings.ShowSeconds}">
+      <TextBlock Text="显示秒数（若格式中包含 %S 或 %s）" />
+    </CheckBox>
+
+    <CheckBox IsChecked="{Binding Settings.IsCompactMode}">
+      <TextBlock Text="紧凑模式" />
+    </CheckBox>
+
+    <CheckBox IsChecked="{Binding Settings.ShowProgress}">
+      <TextBlock Text="显示进度条" />
+    </CheckBox>
+
+    <Separator Margin="0 8" />
+
+    <TextBlock Text="字体大小" FontWeight="Bold" />
+    <Slider Minimum="8" Maximum="48" Value="{Binding Settings.FontSize}" TickFrequency="2" />
+    <TextBlock Text="{Binding Settings.FontSize, StringFormat='{0:F0} px'}" />
+  </StackPanel>
+</ci:ComponentBase>

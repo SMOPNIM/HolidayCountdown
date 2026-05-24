@@ -1,0 +1,8 @@
+id: holiday.countdown
+name: 距离放假还有…
+description: 显示距离下一个法定节假日还有多久，支持自动更新节假日数据。
+entranceAssembly: "HolidayCountdown.dll"
+apiVersion: 2.0.0.0
+version: 1.0.0.0
+author: YourName
+url: https://github.com/YourName/HolidayCountdown
