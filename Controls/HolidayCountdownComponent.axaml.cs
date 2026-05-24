@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using Avalonia.Controls;
+using Avalonia;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
@@ -11,7 +11,7 @@ using HolidayCountdown.Services;
 namespace HolidayCountdown.Controls;
 
 [ComponentInfo("8A1B2C3D-4E5F-6789-AB0C-D1E2F3456789", "假期倒计时", "\uf361", "显示距离下一个法定节假日还有多久。")]
-public partial class HolidayCountdownComponent : ComponentBase<HolidayCountdownSettings>, INotifyPropertyChanged
+public partial class HolidayCountdownComponent : ComponentBase<HolidayCountdownSettings>
 {
     private ILessonsService LessonsService { get; }
     private IExactTimeService ExactTimeService { get; }
@@ -91,7 +91,7 @@ public partial class HolidayCountdownComponent : ComponentBase<HolidayCountdownS
             .Replace("%s", delta.Seconds.ToString("00", CultureInfo.InvariantCulture));
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public new event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
