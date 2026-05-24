@@ -16,7 +16,7 @@ public class PluginSettings
     public DataSourceType DataSource { get; set; } = DataSourceType.Both;
 
     [JsonPropertyName("gitHubUrl")]
-    public string GitHubUrl { get; set; } = "";
+    public string GitHubUrl { get; set; } = "https://raw.githubusercontent.com/SMOPNIM/HolidayCountdown/main/holidays.json";
 
     [JsonPropertyName("apiUrl")]
     public string ApiUrl { get; set; } = "";

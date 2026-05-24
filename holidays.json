@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "holidays": [
+    { "id": "new_year_2025", "name": "元旦", "date": "2025-01-01", "isLunarBased": false, "description": "1月1日" },
+    { "id": "spring_festival_2025", "name": "春节", "date": "2025-01-29", "isLunarBased": true, "description": "农历正月初一" },
+    { "id": "qingming_2025", "name": "清明节", "date": "2025-04-04", "isLunarBased": false, "description": "4月4日或5日" },
+    { "id": "labor_2025", "name": "劳动节", "date": "2025-05-01", "isLunarBased": false, "description": "5月1日" },
+    { "id": "dragon_boat_2025", "name": "端午节", "date": "2025-05-31", "isLunarBased": true, "description": "农历五月初五" },
+    { "id": "mid_autumn_2025", "name": "中秋节", "date": "2025-10-06", "isLunarBased": true, "description": "农历八月十五" },
+    { "id": "national_day_2025", "name": "国庆节", "date": "2025-10-01", "isLunarBased": false, "description": "10月1日" },
+    { "id": "new_year_2026", "name": "元旦", "date": "2026-01-01", "isLunarBased": false, "description": "1月1日" },
+    { "id": "spring_festival_2026", "name": "春节", "date": "2026-02-17", "isLunarBased": true, "description": "农历正月初一" },
+    { "id": "qingming_2026", "name": "清明节", "date": "2026-04-05", "isLunarBased": false, "description": "4月4日或5日" },
+    { "id": "labor_2026", "name": "劳动节", "date": "2026-05-01", "isLunarBased": false, "description": "5月1日" },
+    { "id": "dragon_boat_2026", "name": "端午节", "date": "2026-06-19", "isLunarBased": true, "description": "农历五月初五" },
+    { "id": "mid_autumn_2026", "name": "中秋节", "date": "2026-09-27", "isLunarBased": true, "description": "农历八月十五" },
+    { "id": "national_day_2026", "name": "国庆节", "date": "2026-10-01", "isLunarBased": false, "description": "10月1日" },
+    { "id": "new_year_2027", "name": "元旦", "date": "2027-01-01", "isLunarBased": false, "description": "1月1日" },
+    { "id": "spring_festival_2027", "name": "春节", "date": "2027-02-06", "isLunarBased": true, "description": "农历正月初一" },
+    { "id": "qingming_2027", "name": "清明节", "date": "2027-04-05", "isLunarBased": false, "description": "4月4日或5日" },
+    { "id": "labor_2027", "name": "劳动节", "date": "2027-05-01", "isLunarBased": false, "description": "5月1日" },
+    { "id": "dragon_boat_2027", "name": "端午节", "date": "2027-06-09", "isLunarBased": true, "description": "农历五月初五" },
+    { "id": "mid_autumn_2027", "name": "中秋节", "date": "2027-09-15", "isLunarBased": true, "description": "农历八月十五" },
+    { "id": "national_day_2027", "name": "国庆节", "date": "2027-10-01", "isLunarBased": false, "description": "10月1日" },
+    { "id": "new_year_2028", "name": "元旦", "date": "2028-01-01", "isLunarBased": false, "description": "1月1日" },
+    { "id": "spring_festival_2028", "name": "春节", "date": "2028-01-26", "isLunarBased": true, "description": "农历正月初一" },
+    { "id": "qingming_2028", "name": "清明节", "date": "2028-04-04", "isLunarBased": false, "description": "4月4日或5日" },
+    { "id": "labor_2028", "name": "劳动节", "date": "2028-05-01", "isLunarBased": false, "description": "5月1日" },
+    { "id": "dragon_boat_2028", "name": "端午节", "date": "2028-05-28", "isLunarBased": true, "description": "农历五月初五" },
+    { "id": "mid_autumn_2028", "name": "中秋节", "date": "2028-10-03", "isLunarBased": true, "description": "农历八月十五" },
+    { "id": "national_day_2028", "name": "国庆节", "date": "2028-10-01", "isLunarBased": false, "description": "10月1日" }
+  ]
+}
