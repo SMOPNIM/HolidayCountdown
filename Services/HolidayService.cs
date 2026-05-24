@@ -118,10 +118,43 @@ public class HolidayService
 
     private async Task<List<HolidayInfo>?> FetchFromApiAsync()
     {
-        var response = await _httpClient.GetAsync(_settings.ApiUrl);
-        response.EnsureSuccessStatusCode();
-        var wrapper = await response.Content.ReadFromJsonAsync<HolidayDataWrapper>();
-        return wrapper?.Holidays;
+        var year = DateTime.Now.Year;
+        var holidays = new List<HolidayInfo>();
+
+        for (var y = year; y <= year + 1; y++)
+        {
+            var url = _settings.ApiUrl.TrimEnd('/') + $"/year/{y}";
+            HttpResponseMessage response;
+            try
+            {
+                response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+            }
+            catch
+            {
+                continue;
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var parsed = JsonSerializer.Deserialize<TimorTechResponse>(json);
+            if (parsed?.Data == null) continue;
+
+            foreach (var (dateStr, info) in parsed.Data)
+            {
+                if (info?.Holiday != true) continue;
+                if (!DateTime.TryParse(dateStr, out var date)) continue;
+
+                holidays.Add(new HolidayInfo
+                {
+                    Id = $"timor_{dateStr}",
+                    Name = info.Name ?? "节假日",
+                    Date = date,
+                    Description = "来自 timor.tech API"
+                });
+            }
+        }
+
+        return holidays.Count > 0 ? holidays : null;
     }
 
     private void MergeRemoteHolidays(List<HolidayInfo> remote)
@@ -290,5 +323,18 @@ public class HolidayService
     {
         public int Version { get; set; }
         public List<HolidayInfo> Holidays { get; set; } = new();
+    }
+
+    private class TimorTechResponse
+    {
+        public int Code { get; set; }
+        public Dictionary<string, TimorTechDayInfo>? Data { get; set; }
+    }
+
+    private class TimorTechDayInfo
+    {
+        public bool Holiday { get; set; }
+        public string? Name { get; set; }
+        public string? Date { get; set; }
     }
 }
