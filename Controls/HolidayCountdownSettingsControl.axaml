@@ -5,37 +5,55 @@
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                   xmlns:ci="http://classisland.tech/schemas/xaml/core"
+                  xmlns:controls="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
+                  xmlns:fluent="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
                   xmlns:models="clr-namespace:HolidayCountdown.Models"
                   mc:Ignorable="d"
-                  d:DesignHeight="300" d:DesignWidth="500">
-  <StackPanel Margin="16">
-    <TextBlock Text="显示格式" FontWeight="Bold" Margin="0 0 0 4" />
-    <TextBox Text="{Binding Settings.CustomFormat}" Watermark="距离 %N 还有 %D天 %H小时%M分" />
+                  d:DesignHeight="400" d:DesignWidth="500"
+                  DataContext="{Binding RelativeSource={RelativeSource Self}}">
+  <ScrollViewer>
+    <StackPanel Classes="component-settings-container animated-intro">
 
-    <TextBlock Text="可用占位符" FontWeight="Bold" Margin="0 8 0 0" />
-    <TextBlock Text="%N - 节日名称 | %D - 总天数 | %H - 总小时 | %M - 总分 | %S - 总秒" 
-               TextWrapping="Wrap" FontSize="12" Opacity="0.7" />
-    <TextBlock Text="%d - 天 | %h - 小时(00) | %m - 分(00) | %s - 秒(00)"
-               TextWrapping="Wrap" FontSize="12" Opacity="0.7" Margin="0 0 0 4" />
+      <fluent:SettingsExpander IconSource="{controls:FluentIconSource &#xE8F9;}"
+                               Header="显示格式"
+                               Description="自定义倒计时文本的显示格式。">
+        <fluent:SettingsExpander.Footer>
+          <TextBox Text="{Binding Settings.CustomFormat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                   Width="200" Watermark="距离 %N 还有 %D天 %H小时%M分" />
+        </fluent:SettingsExpander.Footer>
+        <fluent:SettingsExpanderItem Content="可用占位符"
+                                     Description="%N 节日名称 | %D 总天数 | %H 总小时 | %M 总分 | %S 总秒 | %d 天 | %h 时 | %m 分 | %s 秒" />
+      </fluent:SettingsExpander>
 
-    <Border Height="1" Background="{DynamicResource ControlElevationBorderBrush}" Margin="0 8" />
+      <fluent:SettingsExpander IconSource="{controls:FluentIconSource &#xE78C;}"
+                               Header="外观"
+                               Description="字体大小和颜色设置。"
+                               IsExpanded="True">
+        <fluent:SettingsExpanderItem Content="字体大小">
+          <fluent:SettingsExpanderItem.Footer>
+            <StackPanel Orientation="Horizontal">
+              <Slider Minimum="8" Maximum="48" Width="120"
+                      Value="{Binding Settings.FontSize, Mode=TwoWay}" />
+              <TextBlock Text="{Binding Settings.FontSize, StringFormat={}{0:F0}px}"
+                         VerticalAlignment="Center" Margin="8 0 0 0" />
+            </StackPanel>
+          </fluent:SettingsExpanderItem.Footer>
+        </fluent:SettingsExpanderItem>
+      </fluent:SettingsExpander>
 
-    <CheckBox IsChecked="{Binding Settings.ShowSeconds}" Margin="0 0 0 4">
-      <TextBlock Text="显示秒数（若格式中包含 %S 或 %s）" />
-    </CheckBox>
+      <fluent:SettingsExpander IconSource="{controls:FluentIconSource &#xE790;}"
+                               Header="选项"
+                               Description="其他显示选项。">
+        <fluent:SettingsExpanderItem Content="紧凑模式"
+                                     Description="隐藏距离和还有等辅助文字。">
+          <ToggleSwitch IsChecked="{Binding Settings.IsCompactMode, Mode=TwoWay}" />
+        </fluent:SettingsExpanderItem>
+        <fluent:SettingsExpanderItem Content="显示进度条"
+                                     Description="在底部显示进度条。">
+          <ToggleSwitch IsChecked="{Binding Settings.ShowProgress, Mode=TwoWay}" />
+        </fluent:SettingsExpanderItem>
+      </fluent:SettingsExpander>
 
-    <CheckBox IsChecked="{Binding Settings.IsCompactMode}" Margin="0 0 0 4">
-      <TextBlock Text="紧凑模式" />
-    </CheckBox>
-
-    <CheckBox IsChecked="{Binding Settings.ShowProgress}" Margin="0 0 0 4">
-      <TextBlock Text="显示进度条" />
-    </CheckBox>
-
-    <Border Height="1" Background="{DynamicResource ControlElevationBorderBrush}" Margin="0 8" />
-
-    <TextBlock Text="字体大小" FontWeight="Bold" />
-    <Slider Minimum="8" Maximum="48" Value="{Binding Settings.FontSize}" TickFrequency="2" />
-    <TextBlock Text="{Binding Settings.FontSize, StringFormat={}{0:F0} px}" />
-  </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
 </ci:ComponentBase>

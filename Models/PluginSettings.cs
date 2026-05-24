@@ -19,7 +19,7 @@ public class PluginSettings
     public string GitHubUrl { get; set; } = "https://raw.githubusercontent.com/SMOPNIM/HolidayCountdown/main/holidays.json";
 
     [JsonPropertyName("apiUrl")]
-    public string ApiUrl { get; set; } = "";
+    public string ApiUrl { get; set; } = "https://timor.tech/api/holiday";
 
     [JsonPropertyName("lastUpdateTime")]
     public DateTime? LastUpdateTime { get; set; }

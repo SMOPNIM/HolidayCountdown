@@ -7,6 +7,7 @@ using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
 using HolidayCountdown.Models;
 using HolidayCountdown.Services;
+using ReactiveUI;
 
 namespace HolidayCountdown.Controls;
 
@@ -30,6 +31,8 @@ public partial class HolidayCountdownComponent : ComponentBase<HolidayCountdownS
         }
     }
 
+    private IDisposable? _settingsObserver;
+
     public HolidayCountdownComponent(
         ILessonsService lessonsService,
         IExactTimeService exactTimeService,
@@ -48,11 +51,16 @@ public partial class HolidayCountdownComponent : ComponentBase<HolidayCountdownS
     {
         UpdateContent();
         LessonsService.PostMainTimerTicked += OnTimerTick;
+
+        _settingsObserver?.Dispose();
+        _settingsObserver = Settings.ObservableForProperty(x => x.CustomFormat)
+            .Subscribe(_ => UpdateContent());
     }
 
     private void OnDetached(object? sender, VisualTreeAttachmentEventArgs e)
     {
         LessonsService.PostMainTimerTicked -= OnTimerTick;
+        _settingsObserver?.Dispose();
     }
 
     private void OnTimerTick(object? sender, EventArgs e)
