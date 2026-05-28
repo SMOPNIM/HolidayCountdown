@@ -1,4 +1,4 @@
-# 距离放假还有… — HolidayCountdown
+# 距离放假还有…
 
 ClassIsland 插件，在主界面显示距离下一个法定节假日还有多久。
 
