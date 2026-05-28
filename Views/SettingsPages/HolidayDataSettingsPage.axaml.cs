@@ -48,8 +48,12 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
         var s = HolidayService.Settings;
         GitHubUrlBox.Text = s.GitHubUrl;
         ApiUrlBox.Text = s.ApiUrl;
-        DataSourceCombo.SelectedIndex = (int)s.DataSource;
         UpdateStatusText();
+    }
+
+    private void UrlBox_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        SaveDialogSettings();
     }
 
     private void SaveDialogSettings()

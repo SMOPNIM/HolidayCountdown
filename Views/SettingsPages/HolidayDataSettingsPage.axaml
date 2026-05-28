@@ -24,9 +24,9 @@
         </ComboBox>
       </StackPanel>
 
-      <TextBox Name="GitHubUrlBox" Watermark="GitHub URL: https://raw.githubusercontent.com/..." Margin="0 0 0 4" />
+      <TextBox Name="GitHubUrlBox" Watermark="GitHub URL: https://raw.githubusercontent.com/..." Margin="0 0 0 4" TextChanged="UrlBox_OnTextChanged" />
 
-      <TextBox Name="ApiUrlBox" Watermark="API URL: https://api.example.com/holidays" Margin="0 0 0 8" />
+      <TextBox Name="ApiUrlBox" Watermark="API URL: https://api.example.com/holidays" Margin="0 0 0 8" TextChanged="UrlBox_OnTextChanged" />
 
       <StackPanel Orientation="Horizontal" Margin="0 0 0 8">
         <Button Name="BtnRefresh" Classes="Accent" Click="BtnRefresh_OnClick" Margin="0 0 8 0">
