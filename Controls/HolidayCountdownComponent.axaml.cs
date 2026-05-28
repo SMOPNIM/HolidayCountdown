@@ -1,7 +1,9 @@
+using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
@@ -17,15 +19,27 @@ public partial class HolidayCountdownComponent : ComponentBase<HolidayCountdownS
     private IExactTimeService ExactTimeService { get; }
     private HolidayService HolidayService { get; }
 
-    private string _displayText = "";
+    private string _holidayName = "";
+    private string _daysLeft = "";
 
-    public string DisplayText
+    public string HolidayName
     {
-        get => _displayText;
+        get => _holidayName;
         set
         {
-            if (value == _displayText) return;
-            _displayText = value;
+            if (value == _holidayName) return;
+            _holidayName = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string DaysLeft
+    {
+        get => _daysLeft;
+        set
+        {
+            if (value == _daysLeft) return;
+            _daysLeft = value;
             OnPropertyChanged();
         }
     }
@@ -40,31 +54,48 @@ public partial class HolidayCountdownComponent : ComponentBase<HolidayCountdownS
         HolidayService = holidayService;
         InitializeComponent();
 
-        AttachedToVisualTree += OnAttached;
-        DetachedFromVisualTree += OnDetached;
-    }
-
-    private void OnAttached(object? sender, VisualTreeAttachmentEventArgs e)
-    {
-        UpdateContent();
-        LessonsService.PostMainTimerTicked += OnTimerTick;
-        Settings.PropertyChanged += OnSettingsPropertyChanged;
-    }
-
-    private void OnDetached(object? sender, VisualTreeAttachmentEventArgs e)
-    {
-        LessonsService.PostMainTimerTicked -= OnTimerTick;
-        Settings.PropertyChanged -= OnSettingsPropertyChanged;
+        AttachedToVisualTree += (_, _) =>
+        {
+            UpdateContent();
+            ApplyVisualSettings();
+            Settings.PropertyChanged += OnSettingsPropertyChanged;
+            LessonsService.PostMainTimerTicked += OnTimerTick;
+        };
+        DetachedFromVisualTree += (_, _) =>
+        {
+            Settings.PropertyChanged -= OnSettingsPropertyChanged;
+            LessonsService.PostMainTimerTicked -= OnTimerTick;
+        };
     }
 
     private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        ApplyVisualSettings();
         UpdateContent();
     }
 
     private void OnTimerTick(object? sender, EventArgs e)
     {
         UpdateContent();
+    }
+
+    private void ApplyVisualSettings()
+    {
+        var isCompact = Settings.IsCompactModeEnabled;
+        TextBlockTo.IsVisible = !isCompact;
+        TextBlockConnector.IsVisible = !isCompact;
+
+        if (Settings.IsConnectorColorEmphasized)
+        {
+            var fontBrush = new SolidColorBrush(Settings.FontColorValue);
+            TextBlockTo.Foreground = fontBrush;
+            TextBlockConnector.Foreground = fontBrush;
+        }
+        else
+        {
+            TextBlockTo.ClearValue(TextBlock.ForegroundProperty);
+            TextBlockConnector.ClearValue(TextBlock.ForegroundProperty);
+        }
     }
 
     private void UpdateContent()
@@ -74,54 +105,31 @@ public partial class HolidayCountdownComponent : ComponentBase<HolidayCountdownS
 
         if (next == null)
         {
-            DisplayText = "暂无节假日数据";
+            HolidayName = "暂无节假日";
+            DaysLeft = "";
             return;
         }
+
+        HolidayName = next.Name;
 
         var delta = next.Date - now;
         if (delta < TimeSpan.Zero)
             delta = TimeSpan.Zero;
 
-        var fmt = Settings.CustomFormat;
-        if (string.IsNullOrWhiteSpace(fmt))
-            fmt = "距离 %N 还有 %D天 %H小时%M分";
-
-        if (Settings.IsCompactMode)
-        {
-            fmt = "%N%n";
-            DisplayText = fmt
-                .Replace("%N", next.Name)
-                .Replace("%n", delta.TotalDays >= 1
-                    ? $" {Math.Ceiling(delta.TotalDays)}天"
-                    : $" {Math.Ceiling(delta.TotalHours)}小时");
-            return;
-        }
-
-        var resolved = fmt
-            .Replace("%N", next.Name)
+        DaysLeft = Settings.CustomStringFormat
             .Replace("%D", Math.Ceiling(delta.TotalDays).ToString(CultureInfo.InvariantCulture))
             .Replace("%H", Math.Ceiling(delta.TotalHours).ToString(CultureInfo.InvariantCulture))
             .Replace("%M", Math.Ceiling(delta.TotalMinutes).ToString(CultureInfo.InvariantCulture))
             .Replace("%S", Math.Ceiling(delta.TotalSeconds).ToString(CultureInfo.InvariantCulture))
+            .Replace("%X", Math.Ceiling(delta.TotalMilliseconds).ToString(CultureInfo.InvariantCulture))
             .Replace("%d", delta.Days.ToString(CultureInfo.InvariantCulture))
-            .Replace("%h", delta.Hours.ToString("00", CultureInfo.InvariantCulture))
+            .Replace("%h", delta.Hours.ToString(CultureInfo.InvariantCulture))
             .Replace("%m", delta.Minutes.ToString("00", CultureInfo.InvariantCulture))
-            .Replace("%s", delta.Seconds.ToString("00", CultureInfo.InvariantCulture));
-
-        if (!Settings.ShowSeconds)
-        {
-            var secIdx = resolved.LastIndexOf("秒", StringComparison.Ordinal);
-            if (secIdx > 0)
-            {
-                var cut = resolved.LastIndexOf(' ', secIdx - 1);
-                resolved = cut > 0 ? resolved[..cut] : resolved;
-            }
-        }
-
-        DisplayText = resolved;
+            .Replace("%s", delta.Seconds.ToString("00", CultureInfo.InvariantCulture))
+            .Replace("%N", next.Name);
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public new event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {

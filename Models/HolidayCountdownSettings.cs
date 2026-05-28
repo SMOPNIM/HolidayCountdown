@@ -1,17 +1,41 @@
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
+using Avalonia.Media;
 
 namespace HolidayCountdown.Models;
 
 public class HolidayCountdownSettings : INotifyPropertyChanged
 {
-    private double _fontSize = 14;
-    private string _fontColor = "";
-    private bool _isCompactMode;
-    private bool _showSeconds = true;
-    private string _customFormat = "距离 %N 还有 %D天 %H小时%M分";
-    private bool _showProgress;
+    private string _fontColor = "#FFFF0000";
+    private double _fontSize = 16;
+    private bool _isCompactModeEnabled;
+    private bool _isConnectorColorEmphasized;
+    private string _customStringFormat = "%D天";
+
+    [JsonPropertyName("fontColor")]
+    public string FontColor
+    {
+        get => _fontColor;
+        set
+        {
+            if (SetField(ref _fontColor, value))
+                OnPropertyChanged(nameof(FontColorValue));
+        }
+    }
+
+    [JsonIgnore]
+    public Color FontColorValue
+    {
+        get
+        {
+            if (Color.TryParse(_fontColor, out var c))
+                return c;
+            return Colors.Red;
+        }
+        set => FontColor = value.ToString();
+    }
 
     [JsonPropertyName("fontSize")]
     public double FontSize
@@ -20,39 +44,25 @@ public class HolidayCountdownSettings : INotifyPropertyChanged
         set => SetField(ref _fontSize, value);
     }
 
-    [JsonPropertyName("fontColor")]
-    public string FontColor
+    [JsonPropertyName("isCompactModeEnabled")]
+    public bool IsCompactModeEnabled
     {
-        get => _fontColor;
-        set => SetField(ref _fontColor, value);
+        get => _isCompactModeEnabled;
+        set => SetField(ref _isCompactModeEnabled, value);
     }
 
-    [JsonPropertyName("isCompactMode")]
-    public bool IsCompactMode
+    [JsonPropertyName("isConnectorColorEmphasized")]
+    public bool IsConnectorColorEmphasized
     {
-        get => _isCompactMode;
-        set => SetField(ref _isCompactMode, value);
+        get => _isConnectorColorEmphasized;
+        set => SetField(ref _isConnectorColorEmphasized, value);
     }
 
-    [JsonPropertyName("showSeconds")]
-    public bool ShowSeconds
+    [JsonPropertyName("customStringFormat")]
+    public string CustomStringFormat
     {
-        get => _showSeconds;
-        set => SetField(ref _showSeconds, value);
-    }
-
-    [JsonPropertyName("customFormat")]
-    public string CustomFormat
-    {
-        get => _customFormat;
-        set => SetField(ref _customFormat, value);
-    }
-
-    [JsonPropertyName("showProgress")]
-    public bool ShowProgress
-    {
-        get => _showProgress;
-        set => SetField(ref _showProgress, value);
+        get => _customStringFormat;
+        set => SetField(ref _customStringFormat, value);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

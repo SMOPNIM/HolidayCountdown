@@ -40,6 +40,14 @@ public class HolidayService
             .FirstOrDefault();
     }
 
+    public HolidayInfo? GetPreviousHoliday(DateTime now)
+    {
+        return _holidays
+            .Where(h => h.Date < now)
+            .OrderByDescending(h => h.Date)
+            .FirstOrDefault();
+    }
+
     public List<HolidayInfo> GetAllHolidaysSorted()
     {
         var list = new List<HolidayInfo>(_holidays);

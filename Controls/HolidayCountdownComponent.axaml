@@ -7,14 +7,30 @@
                   xmlns:local="clr-namespace:HolidayCountdown.Controls"
                   xmlns:ci="http://classisland.tech/schemas/xaml/core"
                   xmlns:models="clr-namespace:HolidayCountdown.Models"
+                   xmlns:converters="using:ClassIsland.Core.Converters"
                   mc:Ignorable="d"
                   d:DesignHeight="60" d:DesignWidth="400">
   <Grid DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:HolidayCountdownComponent}}"
-        VerticalAlignment="Center">
-    <TextBlock Name="PartDisplayText"
-               Text="{Binding DisplayText, Mode=OneWay}"
-               FontSize="{Binding Settings.FontSize}"
-               VerticalAlignment="Center"
-               TextWrapping="NoWrap" />
+        VerticalAlignment="Stretch">
+    <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+      <TextBlock Text="距离"
+                 x:Name="TextBlockTo"
+                 Classes="connector l-instructive"
+                 VerticalAlignment="Center" />
+      <TextBlock x:Name="HolidayNameBlock"
+                 Text="{Binding HolidayName}"
+                 Foreground="{Binding Settings.FontColorValue, Converter={StaticResource ColorToColorPickerBrushConverter}}"
+                 FontSize="{Binding Settings.FontSize}"
+                 VerticalAlignment="Center" />
+      <TextBlock x:Name="TextBlockConnector"
+                 Text="还有"
+                 Classes="connector l-instructive"
+                 VerticalAlignment="Center" />
+      <TextBlock x:Name="DaysLeftBlock"
+                 Text="{Binding DaysLeft, Mode=OneWay}"
+                 Foreground="{Binding Settings.FontColorValue, Converter={StaticResource ColorToColorPickerBrushConverter}}"
+                 FontSize="{Binding Settings.FontSize}"
+                 VerticalAlignment="Center"/>
+    </StackPanel>
   </Grid>
 </ci:ComponentBase>

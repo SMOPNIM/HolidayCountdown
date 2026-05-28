@@ -8,9 +8,13 @@
                   xmlns:controls="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
                   xmlns:fluent="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
                   xmlns:models="clr-namespace:HolidayCountdown.Models"
+                  xmlns:converters="using:ClassIsland.Core.Converters"
                   mc:Ignorable="d"
                   d:DesignHeight="400" d:DesignWidth="500"
                   DataContext="{Binding RelativeSource={RelativeSource Self}}">
+  <ci:ComponentBase.Resources>
+    <converters:ColorToColorPickerBrushConverter x:Key="ColorToColorPickerBrushConverter"/>
+  </ci:ComponentBase.Resources>
   <ScrollViewer>
     <StackPanel Classes="component-settings-container animated-intro">
 
@@ -18,40 +22,86 @@
                                Header="显示格式"
                                Description="自定义倒计时文本的显示格式。">
         <fluent:SettingsExpander.Footer>
-          <TextBox Text="{Binding Settings.CustomFormat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                   Width="200" Watermark="距离 %N 还有 %D天 %H小时%M分" />
+          <TextBox Text="{Binding Settings.CustomStringFormat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                   Width="200" Watermark="%D天" />
         </fluent:SettingsExpander.Footer>
         <fluent:SettingsExpanderItem Content="可用占位符"
                                      Description="%N 节日名称 | %D 总天数 | %H 总小时 | %M 总分 | %S 总秒 | %d 天 | %h 时 | %m 分 | %s 秒" />
       </fluent:SettingsExpander>
 
-      <fluent:SettingsExpander IconSource="{controls:FluentIconSource &#xE78C;}"
-                               Header="外观"
-                               Description="字体大小和颜色设置。"
+      <fluent:SettingsExpander IconSource="{controls:FluentIconSource &#xe079;}"
+                               Header="显示内容"
+                               Description="要在组件上显示的信息"
                                IsExpanded="True">
-        <fluent:SettingsExpanderItem Content="字体大小">
+        <fluent:SettingsExpanderItem Content="紧凑模式"
+                                     Description="隐藏「距离」「还有」等辅助文字，仅显示节日名称和倒计时天数。">
+          <fluent:SettingsExpanderItem.Footer>
+            <ToggleSwitch IsChecked="{Binding Settings.IsCompactModeEnabled, Mode=TwoWay}"/>
+          </fluent:SettingsExpanderItem.Footer>
+        </fluent:SettingsExpanderItem>
+        <fluent:SettingsExpanderItem Content="倒计时格式">
           <fluent:SettingsExpanderItem.Footer>
             <StackPanel Orientation="Horizontal">
-              <Slider Minimum="8" Maximum="48" Width="120"
-                      Value="{Binding Settings.FontSize, Mode=TwoWay}" />
-              <TextBlock Text="{Binding Settings.FontSize, StringFormat={}{0:F0}px}"
-                         VerticalAlignment="Center" Margin="8 0 0 0" />
+              <TextBox Text="{Binding Settings.CustomStringFormat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       MinWidth="120" MaxWidth="300" />
+              <Button Theme="{StaticResource TransparentButton}"
+                      Content="{controls:FluentIcon &#xee31;}">
+                <Button.Flyout>
+                  <Flyout>
+                    <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *">
+                      <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Run Text="格式化变量说明" FontWeight="Bold" />
+                      </TextBlock>
+                      <SelectableTextBlock Grid.Row="1" Grid.Column="0" Margin="0 0 4 0">
+                        <Run Text="%D - 总天数"/><LineBreak/>
+                        <Run Text="%H - 总小时数"/><LineBreak/>
+                        <Run Text="%M - 总分钟数"/><LineBreak/>
+                        <Run Text="%S - 总秒数"/><LineBreak/>
+                        <Run Text="%X - 总毫秒数"/><LineBreak/>
+                        <Run Text="%N - 节日名称"/><LineBreak/>
+                        <Run Text="以上数值向上取整。" FontWeight="Medium"/>
+                      </SelectableTextBlock>
+                      <SelectableTextBlock Grid.Row="1" Grid.Column="1">
+                        <Run Text="%d - 天"/><LineBreak/>
+                        <Run Text="%h - 小时"/><LineBreak/>
+                        <Run Text="%m - 分钟"/><LineBreak/>
+                        <Run Text="%s - 秒"/><LineBreak/>
+                        <Run Text="以上数值取对应元素的值。" FontWeight="Medium"/>
+                      </SelectableTextBlock>
+                    </Grid>
+                  </Flyout>
+                </Button.Flyout>
+              </Button>
             </StackPanel>
           </fluent:SettingsExpanderItem.Footer>
         </fluent:SettingsExpanderItem>
       </fluent:SettingsExpander>
 
-      <fluent:SettingsExpander IconSource="{controls:FluentIconSource &#xE790;}"
-                               Header="选项"
-                               Description="其他显示选项。">
-        <fluent:SettingsExpanderItem Content="紧凑模式"
-                                     Description="隐藏距离和还有等辅助文字。">
-          <ToggleSwitch IsChecked="{Binding Settings.IsCompactMode, Mode=TwoWay}" />
+      <fluent:SettingsExpander IconSource="{controls:FluentIconSource &#xEC54;}"
+                               Header="强调色"
+                               Description="节日名称和倒计时的字体颜色。"
+                               IsExpanded="True">
+        <fluent:SettingsExpander.Footer>
+          <ColorPicker Color="{Binding Settings.FontColorValue, Mode=TwoWay}"/>
+        </fluent:SettingsExpander.Footer>
+        <fluent:SettingsExpanderItem Content="倒计时连接词使用强调颜色"
+                                     Description="启用后，倒计时连接词颜色与字体颜色一致，否则为默认颜色。">
+          <fluent:SettingsExpanderItem.Footer>
+            <ToggleSwitch IsChecked="{Binding Settings.IsConnectorColorEmphasized, Mode=TwoWay}"/>
+          </fluent:SettingsExpanderItem.Footer>
         </fluent:SettingsExpanderItem>
-        <fluent:SettingsExpanderItem Content="显示进度条"
-                                     Description="在底部显示进度条。">
-          <ToggleSwitch IsChecked="{Binding Settings.ShowProgress, Mode=TwoWay}" />
-        </fluent:SettingsExpanderItem>
+      </fluent:SettingsExpander>
+
+      <fluent:SettingsExpander IconSource="{controls:FluentIconSource &#xF26F;}"
+                               Header="字体大小"
+                               Description="节日名称和倒计时的字体大小。">
+        <fluent:SettingsExpander.Footer>
+          <Slider Width="180"
+                  Maximum="30" Minimum="16" TickFrequency="1"
+                  TickPlacement="None" IsSnapToTickEnabled="True"
+                  Classes="auto-tooltip"
+                  Value="{Binding Settings.FontSize}" />
+        </fluent:SettingsExpander.Footer>
       </fluent:SettingsExpander>
 
     </StackPanel>
