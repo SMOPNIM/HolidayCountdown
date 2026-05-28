@@ -1,4 +1,5 @@
 <ci:SettingsPageBase x:Class="HolidayCountdown.Views.SettingsPages.HolidayDataSettingsPage"
+                      DataContext="{Binding RelativeSource={RelativeSource Self}}"
                       xmlns="https://github.com/avaloniaui"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,7 +16,7 @@
       <StackPanel Orientation="Horizontal" Margin="0 0 0 4">
         <TextBlock Text="数据源：" VerticalAlignment="Center" Margin="0 0 8 0" />
         <ComboBox Name="DataSourceCombo"
-                  SelectedIndex="{Binding DataSourceIndex}"
+                  SelectedIndex="{Binding DataSourceIndex, Mode=TwoWay}"
                   Width="150">
           <ComboBoxItem>仅本地</ComboBoxItem>
           <ComboBoxItem>GitHub</ComboBoxItem>
@@ -24,9 +25,9 @@
         </ComboBox>
       </StackPanel>
 
-      <TextBox Name="GitHubUrlBox" Watermark="GitHub URL: https://raw.githubusercontent.com/..." Margin="0 0 0 4" TextChanged="UrlBox_OnTextChanged" />
+      <TextBox Name="GitHubUrlBox" Watermark="GitHub URL: https://raw.githubusercontent.com/..." Margin="0 0 0 4" TextChanged="UrlBox_OnTextChanged" LostFocus="UrlBox_OnLostFocus" />
 
-      <TextBox Name="ApiUrlBox" Watermark="API URL: https://api.example.com/holidays" Margin="0 0 0 8" TextChanged="UrlBox_OnTextChanged" />
+      <TextBox Name="ApiUrlBox" Watermark="API URL: https://api.example.com/holidays" Margin="0 0 0 8" TextChanged="UrlBox_OnTextChanged" LostFocus="UrlBox_OnLostFocus" />
 
       <StackPanel Orientation="Horizontal" Margin="0 0 0 8">
         <Button Name="BtnRefresh" Classes="Accent" Click="BtnRefresh_OnClick" Margin="0 0 8 0">

@@ -56,6 +56,11 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
         SaveDialogSettings();
     }
 
+    private void UrlBox_OnLostFocus(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        SaveDialogSettings();
+    }
+
     private void SaveDialogSettings()
     {
         HolidayService.Settings.GitHubUrl = GitHubUrlBox.Text ?? "";
