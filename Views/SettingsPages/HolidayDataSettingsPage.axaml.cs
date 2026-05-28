@@ -109,11 +109,66 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
 
     private async void BtnAddHoliday_OnClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        var nameBox = new TextBox { Watermark = "节日名称" };
-        var datePicker = new DatePicker();
+        var holiday = await ShowHolidayDialog(null);
+        if (holiday == null) return;
+
+        HolidayService.AddOrUpdateHoliday(holiday);
+        LoadHolidays();
+        StatusText.Text = $"已添加节假日：{holiday.Name}";
+    }
+
+    private async void EditHoliday_OnClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (sender is not Button { CommandParameter: HolidayInfo existing }) return;
+
+        var holiday = await ShowHolidayDialog(existing);
+        if (holiday == null) return;
+
+        holiday.Id = existing.Id;
+        HolidayService.AddOrUpdateHoliday(holiday);
+        LoadHolidays();
+        StatusText.Text = $"已更新节假日：{holiday.Name}";
+    }
+
+    private async void DeleteHoliday_OnClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (sender is not Button { CommandParameter: HolidayInfo holiday }) return;
+
+        var confirm = new ContentDialog
+        {
+            Title = "删除节假日",
+            Content = $"确定要删除「{holiday.Name}」（{holiday.Date:yyyy-MM-dd}）吗？",
+            PrimaryButtonText = "删除",
+            CloseButtonText = "取消",
+            DefaultButton = ContentDialogButton.Close
+        };
+
+        var result = await confirm.ShowAsync();
+        if (result != ContentDialogResult.Primary) return;
+
+        HolidayService.RemoveHoliday(holiday.Id);
+        LoadHolidays();
+        StatusText.Text = $"已删除节假日：{holiday.Name}";
+    }
+
+    private async Task<HolidayInfo?> ShowHolidayDialog(HolidayInfo? existing)
+    {
+        var isEdit = existing != null;
+
+        var nameBox = new TextBox
+        {
+            Watermark = "节日名称",
+            Text = existing?.Name ?? ""
+        };
+        var datePicker = new DatePicker
+        {
+            SelectedDate = existing?.Date
+        };
         var idBox = new TextBox
         {
-            Watermark = "唯一标识（如 spring_festival_2026，留空自动生成）"
+            Watermark = "唯一标识（如 spring_festival_2026，留空自动生成）",
+            Text = existing?.Id ?? "",
+            IsEnabled = !isEdit
         };
 
         var stack = new StackPanel { Spacing = 12 };
@@ -126,21 +181,21 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
 
         var dialog = new ContentDialog
         {
-            Title = "添加节假日",
+            Title = isEdit ? "编辑节假日" : "添加节假日",
             Content = stack,
-            PrimaryButtonText = "添加",
+            PrimaryButtonText = isEdit ? "保存" : "添加",
             CloseButtonText = "取消",
             DefaultButton = ContentDialogButton.Primary
         };
 
         var result = await dialog.ShowAsync();
-        if (result != ContentDialogResult.Primary) return;
+        if (result != ContentDialogResult.Primary) return null;
 
         var name = nameBox.Text?.Trim();
         if (string.IsNullOrWhiteSpace(name))
         {
             StatusText.Text = "节日名称不能为空";
-            return;
+            return null;
         }
 
         var date = datePicker.SelectedDate?.DateTime ?? DateTime.Now;
@@ -150,16 +205,12 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
             id = $"custom_{name}_{date:yyyyMMdd}";
         }
 
-        var holiday = new HolidayInfo
+        return new HolidayInfo
         {
             Id = id,
             Name = name,
             Date = date,
-            Description = "用户自定义"
+            Description = existing?.Description ?? "用户自定义"
         };
-
-        HolidayService.AddOrUpdateHoliday(holiday);
-        LoadHolidays();
-        StatusText.Text = $"已添加节假日：{name}";
     }
 }

@@ -43,19 +43,29 @@
 
     <!-- 节假日列表 -->
     <ScrollViewer Grid.Row="1" Margin="0 8">
-      <ItemsControl Name="HolidayList" ItemsSource="{Binding Holidays}">
-        <ItemsControl.ItemTemplate>
+      <ListBox Name="HolidayList" ItemsSource="{Binding Holidays}">
+        <ListBox.ItemTemplate>
           <DataTemplate>
             <Border BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0 0 0 1" Padding="8 4">
-              <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Date, StringFormat={}{0:yyyy-MM-dd}}" Width="100" />
-                <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0 0 8 0" />
-                <TextBlock Text="{Binding Description}" Opacity="0.6" />
-              </StackPanel>
+              <Grid ColumnDefinitions="*,Auto,Auto">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding Date, StringFormat={}{0:yyyy-MM-dd}}" Width="100" />
+                  <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0 0 8 0" />
+                  <TextBlock Text="{Binding Description}" Opacity="0.6" />
+                </StackPanel>
+                <Button Grid.Column="1" Margin="4 0" Click="EditHoliday_OnClick"
+                        CommandParameter="{Binding}">
+                  <TextBlock Text="编辑" />
+                </Button>
+                <Button Grid.Column="2" Margin="4 0" Click="DeleteHoliday_OnClick"
+                        CommandParameter="{Binding}">
+                  <TextBlock Text="删除" />
+                </Button>
+              </Grid>
             </Border>
           </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
+        </ListBox.ItemTemplate>
+      </ListBox>
     </ScrollViewer>
 
     <!-- 添加节假日 -->
