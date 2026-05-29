@@ -160,7 +160,7 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
             Watermark = "节日名称",
             Text = existing?.Name ?? ""
         };
-        var datePicker = new DatePicker
+        var datePicker = new CalendarDatePicker
         {
             SelectedDate = existing?.Date
         };
@@ -198,7 +198,7 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
             return null;
         }
 
-        var date = datePicker.SelectedDate?.DateTime ?? DateTime.Now;
+        var date = datePicker.SelectedDate ?? DateTime.Now;
         var id = idBox.Text?.Trim();
         if (string.IsNullOrWhiteSpace(id))
         {
