@@ -161,7 +161,8 @@ public class HolidayService
                     Name = info.Name ?? "节假日",
                     Date = date,
                     Description = isDayOff ? "调休补班" : "来自 timor.tech API",
-                    IsDayOff = isDayOff
+                    IsDayOff = isDayOff,
+                    TargetHolidayName = isDayOff ? info.Target : null
                 });
             }
         }
@@ -280,7 +281,7 @@ public class HolidayService
 
     private static bool HasDifferences(HolidayInfo a, HolidayInfo b)
     {
-        return a.Date != b.Date || a.Name != b.Name || a.Description != b.Description || a.IsDayOff != b.IsDayOff;
+        return a.Date != b.Date || a.Name != b.Name || a.Description != b.Description || a.IsDayOff != b.IsDayOff || a.TargetHolidayName != b.TargetHolidayName;
     }
 
     private void SaveCache()
@@ -304,11 +305,11 @@ public class HolidayService
             new() { Id = "dragon_boat_2025", Name = "端午节", Date = new DateTime(2025, 5, 31), IsLunarBased = true, Description = "农历五月初五" },
             new() { Id = "mid_autumn_2025", Name = "中秋节", Date = new DateTime(2025, 10, 6), IsLunarBased = true, Description = "农历八月十五" },
             new() { Id = "national_day_2025", Name = "国庆节", Date = new DateTime(2025, 10, 1), Description = "10月1日" },
-            new() { Id = "dayoff_spring_before_2025", Name = "春节前补班", Date = new DateTime(2025, 1, 26), IsDayOff = true, Description = "调休补班" },
-            new() { Id = "dayoff_spring_after_2025", Name = "春节后补班", Date = new DateTime(2025, 2, 8), IsDayOff = true, Description = "调休补班" },
-            new() { Id = "dayoff_labor_before_2025", Name = "劳动节前补班", Date = new DateTime(2025, 4, 27), IsDayOff = true, Description = "调休补班" },
-            new() { Id = "dayoff_national_before_2025", Name = "国庆节前补班", Date = new DateTime(2025, 9, 28), IsDayOff = true, Description = "调休补班" },
-            new() { Id = "dayoff_national_after_2025", Name = "国庆节后补班", Date = new DateTime(2025, 10, 11), IsDayOff = true, Description = "调休补班" },
+            new() { Id = "dayoff_spring_before_2025", Name = "春节前补班", Date = new DateTime(2025, 1, 26), IsDayOff = true, TargetHolidayName = "春节", Description = "调休补班" },
+            new() { Id = "dayoff_spring_after_2025", Name = "春节后补班", Date = new DateTime(2025, 2, 8), IsDayOff = true, TargetHolidayName = "春节", Description = "调休补班" },
+            new() { Id = "dayoff_labor_before_2025", Name = "劳动节前补班", Date = new DateTime(2025, 4, 27), IsDayOff = true, TargetHolidayName = "劳动节", Description = "调休补班" },
+            new() { Id = "dayoff_national_before_2025", Name = "国庆节前补班", Date = new DateTime(2025, 9, 28), IsDayOff = true, TargetHolidayName = "国庆节", Description = "调休补班" },
+            new() { Id = "dayoff_national_after_2025", Name = "国庆节后补班", Date = new DateTime(2025, 10, 11), IsDayOff = true, TargetHolidayName = "国庆节", Description = "调休补班" },
             // 2026
             new() { Id = "new_year_2026", Name = "元旦", Date = new DateTime(2026, 1, 1), Description = "1月1日" },
             new() { Id = "spring_festival_2026", Name = "春节", Date = new DateTime(2026, 2, 17), IsLunarBased = true, Description = "农历正月初一" },
@@ -317,12 +318,12 @@ public class HolidayService
             new() { Id = "dragon_boat_2026", Name = "端午节", Date = new DateTime(2026, 6, 19), IsLunarBased = true, Description = "农历五月初五" },
             new() { Id = "mid_autumn_2026", Name = "中秋节", Date = new DateTime(2026, 9, 27), IsLunarBased = true, Description = "农历八月十五" },
             new() { Id = "national_day_2026", Name = "国庆节", Date = new DateTime(2026, 10, 1), Description = "10月1日" },
-            new() { Id = "dayoff_newyear_after_2026", Name = "元旦后补班", Date = new DateTime(2026, 1, 4), IsDayOff = true, Description = "调休补班" },
-            new() { Id = "dayoff_spring_before_2026", Name = "春节前补班", Date = new DateTime(2026, 2, 14), IsDayOff = true, Description = "调休补班" },
-            new() { Id = "dayoff_spring_after_2026", Name = "春节后补班", Date = new DateTime(2026, 2, 28), IsDayOff = true, Description = "调休补班" },
-            new() { Id = "dayoff_labor_after_2026", Name = "劳动节后补班", Date = new DateTime(2026, 5, 9), IsDayOff = true, Description = "调休补班" },
-            new() { Id = "dayoff_midautumn_before_2026", Name = "中秋节前补班", Date = new DateTime(2026, 9, 20), IsDayOff = true, Description = "调休补班" },
-            new() { Id = "dayoff_national_after_2026", Name = "国庆节后补班", Date = new DateTime(2026, 10, 10), IsDayOff = true, Description = "调休补班" },
+            new() { Id = "dayoff_newyear_after_2026", Name = "元旦后补班", Date = new DateTime(2026, 1, 4), IsDayOff = true, TargetHolidayName = "元旦", Description = "调休补班" },
+            new() { Id = "dayoff_spring_before_2026", Name = "春节前补班", Date = new DateTime(2026, 2, 14), IsDayOff = true, TargetHolidayName = "春节", Description = "调休补班" },
+            new() { Id = "dayoff_spring_after_2026", Name = "春节后补班", Date = new DateTime(2026, 2, 28), IsDayOff = true, TargetHolidayName = "春节", Description = "调休补班" },
+            new() { Id = "dayoff_labor_after_2026", Name = "劳动节后补班", Date = new DateTime(2026, 5, 9), IsDayOff = true, TargetHolidayName = "劳动节", Description = "调休补班" },
+            new() { Id = "dayoff_midautumn_before_2026", Name = "中秋节前补班", Date = new DateTime(2026, 9, 20), IsDayOff = true, TargetHolidayName = "中秋节", Description = "调休补班" },
+            new() { Id = "dayoff_national_after_2026", Name = "国庆节后补班", Date = new DateTime(2026, 10, 10), IsDayOff = true, TargetHolidayName = "国庆节", Description = "调休补班" },
             // 2027
             new() { Id = "new_year_2027", Name = "元旦", Date = new DateTime(2027, 1, 1), Description = "1月1日" },
             new() { Id = "spring_festival_2027", Name = "春节", Date = new DateTime(2027, 2, 6), IsLunarBased = true, Description = "农历正月初一" },
@@ -358,24 +359,55 @@ public class HolidayService
 
         foreach (var dayOff in dayOffs)
         {
-            Guid? sourceGuid = _settings.DayOffSourcePlanId;
-            if (sourceGuid == null || sourceGuid == Guid.Empty)
-            {
-                sourceGuid = FindSourcePlanId(profileService, dayOff.Date);
-            }
-
-            if (sourceGuid != null && sourceGuid != Guid.Empty)
-            {
+            var sourceGuid = FindSourcePlanIdForDayOff(profileService, dayOff);
+            if (sourceGuid != null)
                 profileService.CreateTempClassPlan(sourceGuid.Value, enableDateTime: dayOff.Date);
-            }
         }
     }
 
-    private static Guid? FindSourcePlanId(IProfileService profileService, DateTime dayOffDate)
+    private Guid? FindSourcePlanIdForDayOff(IProfileService profileService, HolidayInfo dayOff)
     {
-        var orderedPlan = profileService.Profile.ClassPlans
-            .FirstOrDefault(x => !x.Value.IsOverlay && x.Value.IsEnabled);
-        return orderedPlan.Value != null ? orderedPlan.Key : null;
+        // Determine which weekday this 调休补班 is replacing.
+        // 1. Find the target holiday by name from _holidays
+        // 2. Use that holiday's date to determine the day-of-week
+        // 3. Find a non-overlay class plan matching that day-of-week
+
+        if (!string.IsNullOrWhiteSpace(dayOff.TargetHolidayName))
+        {
+            var targetHoliday = _holidays.FirstOrDefault(h =>
+                !h.IsDayOff &&
+                h.Name.Contains(dayOff.TargetHolidayName, StringComparison.OrdinalIgnoreCase));
+
+            if (targetHoliday != null)
+            {
+                var targetDow = (int)targetHoliday.Date.DayOfWeek;
+                var plan = profileService.Profile.ClassPlans
+                    .FirstOrDefault(x =>
+                        !x.Value.IsOverlay &&
+                        x.Value.IsEnabled &&
+                        x.Value.TimeRule.WeekDay == targetDow);
+                if (plan.Value != null)
+                    return plan.Key;
+            }
+        }
+
+        // Fallback: search backwards for a recent weekday with a class plan
+        for (var i = -1; i >= -7; i--)
+        {
+            var checkDate = dayOff.Date.AddDays(i);
+            if (checkDate.DayOfWeek == DayOfWeek.Saturday || checkDate.DayOfWeek == DayOfWeek.Sunday)
+                continue;
+
+            var plan = profileService.Profile.ClassPlans
+                .FirstOrDefault(x =>
+                    !x.Value.IsOverlay &&
+                    x.Value.IsEnabled &&
+                    x.Value.TimeRule.WeekDay == (int)checkDate.DayOfWeek);
+            if (plan.Value != null)
+                return plan.Key;
+        }
+
+        return null;
     }
 
     private class HolidayDataWrapper
@@ -395,5 +427,6 @@ public class HolidayService
         public bool Holiday { get; set; }
         public string? Name { get; set; }
         public string? Date { get; set; }
+        public string? Target { get; set; }
     }
 }

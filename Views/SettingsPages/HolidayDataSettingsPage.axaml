@@ -10,130 +10,116 @@
                       xmlns:models="clr-namespace:HolidayCountdown.Models"
                       mc:Ignorable="d"
                       d:DesignHeight="600" d:DesignWidth="800">
-  <Grid RowDefinitions="Auto,*">
-    <!-- 数据源配置 -->
-    <StackPanel Grid.Row="0" Classes="settings-container animated-intro">
-        <ci:IconText Glyph="&#xE943;" Text="数据源" Margin="0 0 0 4" />
-        <fluent:SettingsExpander IconSource="{ci:FluentIconSource &#xE943;}"
-                                 Header="节假日数据源"
-                                 Description="选择获取节假日数据的远程来源。"
-                                 IsExpanded="True">
-          <fluent:SettingsExpander.Footer>
-            <ComboBox Name="DataSourceCombo"
-                      SelectedIndex="{Binding DataSourceIndex, Mode=TwoWay}"
-                      MinWidth="160">
-              <ComboBoxItem>仅本地</ComboBoxItem>
-              <ComboBoxItem>GitHub</ComboBoxItem>
-              <ComboBoxItem>API</ComboBoxItem>
-              <ComboBoxItem>Both（API优先）</ComboBoxItem>
-            </ComboBox>
-          </fluent:SettingsExpander.Footer>
-          <fluent:SettingsExpanderItem Content="GitHub URL">
-            <fluent:SettingsExpanderItem.Footer>
-              <TextBox Name="GitHubUrlBox" Width="300"
-                       Watermark="https://raw.githubusercontent.com/..."
-                       TextChanged="UrlBox_OnTextChanged"
-                       LostFocus="UrlBox_OnLostFocus" />
-            </fluent:SettingsExpanderItem.Footer>
-          </fluent:SettingsExpanderItem>
-          <fluent:SettingsExpanderItem Content="API URL">
-            <fluent:SettingsExpanderItem.Footer>
-              <TextBox Name="ApiUrlBox" Width="300"
-                       Watermark="https://api.example.com/holidays"
-                       TextChanged="UrlBox_OnTextChanged"
-                       LostFocus="UrlBox_OnLostFocus" />
-            </fluent:SettingsExpanderItem.Footer>
-          </fluent:SettingsExpanderItem>
-          <fluent:SettingsExpanderItem>
-            <fluent:SettingsExpanderItem.Footer>
-              <StackPanel Orientation="Horizontal" Spacing="8">
-                <Button Name="BtnRefresh" Classes="Accent" Click="BtnRefresh_OnClick">
-                  <ci:IconText Glyph="&#xE72C;" Text="立即更新" />
-                </Button>
-                <Button Name="BtnReset" Click="BtnReset_OnClick">
-                  <ci:IconText Glyph="&#xE777;" Text="恢复默认" />
-                </Button>
-              </StackPanel>
-            </fluent:SettingsExpanderItem.Footer>
-          </fluent:SettingsExpanderItem>
-        </fluent:SettingsExpander>
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Classes="settings-container animated-intro" MaxWidth="960">
+      <ci:IconText Glyph="&#xE943;" Text="数据源" Margin="0 0 0 4" />
+      <fluent:SettingsExpander IconSource="{ci:FluentIconSource &#xE943;}"
+                               Header="节假日数据源"
+                               Description="选择获取节假日数据的远程来源。"
+                               IsExpanded="True">
+        <fluent:SettingsExpander.Footer>
+          <ComboBox Name="DataSourceCombo"
+                    SelectedIndex="{Binding DataSourceIndex, Mode=TwoWay}"
+                    MinWidth="160">
+            <ComboBoxItem>仅本地</ComboBoxItem>
+            <ComboBoxItem>GitHub</ComboBoxItem>
+            <ComboBoxItem>API</ComboBoxItem>
+            <ComboBoxItem>Both（API优先）</ComboBoxItem>
+          </ComboBox>
+        </fluent:SettingsExpander.Footer>
+        <fluent:SettingsExpanderItem Content="GitHub URL">
+          <fluent:SettingsExpanderItem.Footer>
+            <TextBox Name="GitHubUrlBox" Width="300"
+                     Watermark="https://raw.githubusercontent.com/..."
+                     TextChanged="UrlBox_OnTextChanged"
+                     LostFocus="UrlBox_OnLostFocus" />
+          </fluent:SettingsExpanderItem.Footer>
+        </fluent:SettingsExpanderItem>
+        <fluent:SettingsExpanderItem Content="API URL">
+          <fluent:SettingsExpanderItem.Footer>
+            <TextBox Name="ApiUrlBox" Width="300"
+                     Watermark="https://api.example.com/holidays"
+                     TextChanged="UrlBox_OnTextChanged"
+                     LostFocus="UrlBox_OnLostFocus" />
+          </fluent:SettingsExpanderItem.Footer>
+        </fluent:SettingsExpanderItem>
+        <fluent:SettingsExpanderItem>
+          <fluent:SettingsExpanderItem.Footer>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Name="BtnRefresh" Classes="Accent" Click="BtnRefresh_OnClick">
+                <ci:IconText Glyph="&#xE72C;" Text="立即更新" />
+              </Button>
+              <Button Name="BtnReset" Click="BtnReset_OnClick">
+                <ci:IconText Glyph="&#xE777;" Text="恢复默认" />
+              </Button>
+            </StackPanel>
+          </fluent:SettingsExpanderItem.Footer>
+        </fluent:SettingsExpanderItem>
+      </fluent:SettingsExpander>
 
-        <TextBlock Name="StatusText" FontSize="12" Opacity="0.6" Margin="0 0 0 8" />
+      <TextBlock Name="StatusText" FontSize="12" Opacity="0.6" Margin="0 0 0 8" />
 
-        <fluent:SettingsExpander IconSource="{ci:FluentIconSource &#xE7C1;}"
-                                 Header="调休临时层"
-                                 Description="在调休上班日自动创建临时层课表。"
-                                 IsExpanded="True">
-          <fluent:SettingsExpander.Footer>
-            <ToggleSwitch Name="AutoTempLayerToggle"
-                          OnContent="开启" OffContent="关闭"
-                          IsChecked="{Binding EnableAutoTempLayer, Mode=TwoWay}" />
-          </fluent:SettingsExpander.Footer>
-          <fluent:SettingsExpanderItem Content="源课表 ID（可选）"
-                                       Description="留空将自动选择第一个启用的课表">
-            <fluent:SettingsExpanderItem.Footer>
-              <TextBox Name="SourcePlanIdBox" Width="280"
-                       Watermark="00000000-0000-0000-0000-000000000000"
-                       TextChanged="SourcePlanIdBox_OnTextChanged" />
-            </fluent:SettingsExpanderItem.Footer>
-          </fluent:SettingsExpanderItem>
-          <fluent:SettingsExpanderItem Content="倒计时显示调休补班"
-                                       Description="开启后组件将调休补班日纳入倒计时">
-            <fluent:SettingsExpanderItem.Footer>
-              <ToggleSwitch OnContent="开启" OffContent="关闭"
-                            IsChecked="{Binding ShowDayOffInCountdown, Mode=TwoWay}" />
-            </fluent:SettingsExpanderItem.Footer>
-          </fluent:SettingsExpanderItem>
-        </fluent:SettingsExpander>
+      <fluent:SettingsExpander IconSource="{ci:FluentIconSource &#xE7C1;}"
+                               Header="调休临时层"
+                               Description="在调休上班日根据对应工作日课表自动创建临时层。"
+                               IsExpanded="True">
+        <fluent:SettingsExpander.Footer>
+          <ToggleSwitch Name="AutoTempLayerToggle"
+                        OnContent="开启" OffContent="关闭"
+                        IsChecked="{Binding EnableAutoTempLayer, Mode=TwoWay}" />
+        </fluent:SettingsExpander.Footer>
+        <fluent:SettingsExpanderItem Content="倒计时显示调休补班"
+                                     Description="开启后组件将调休补班日纳入倒计时">
+          <fluent:SettingsExpanderItem.Footer>
+            <ToggleSwitch OnContent="开启" OffContent="关闭"
+                          IsChecked="{Binding ShowDayOffInCountdown, Mode=TwoWay}" />
+          </fluent:SettingsExpanderItem.Footer>
+        </fluent:SettingsExpanderItem>
+      </fluent:SettingsExpander>
 
-        <Separator Margin="0 8 0 4" />
-      </StackPanel>
+      <Separator Margin="0 8 0 4" />
 
-    <!-- 节假日管理（独立滚动） -->
-    <Grid Grid.Row="1" Margin="12 0 18 12" MaxWidth="960">
-      <Grid RowDefinitions="Auto,*,Auto">
-        <ci:IconText Glyph="&#xE9B0;" Text="节假日" Margin="0 0 0 4" />
-        <Border Grid.Row="1" BorderBrush="{DynamicResource CardBorderBrush}"
-                BorderThickness="1" CornerRadius="4">
-          <ScrollViewer>
-            <ListBox Name="HolidayList" BorderThickness="0"
-                     ItemsSource="{Binding Holidays}">
-              <ListBox.ItemTemplate>
-                <DataTemplate>
-                  <Border BorderBrush="{DynamicResource CardBorderBrush}"
-                          BorderThickness="0 0 0 1" Padding="8 6">
-                    <Grid ColumnDefinitions="*,Auto,Auto">
-                      <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding Date, StringFormat={}{0:yyyy-MM-dd}}"
-                                   Width="100" />
-                        <TextBlock Text="{Binding Name}" FontWeight="Bold"
-                                   Margin="0 0 8 0" />
-                        <TextBlock Text="{Binding Description}" Opacity="0.6" />
-                      </StackPanel>
-                      <Button Grid.Column="1" Margin="4 0"
-                              Theme="{StaticResource TransparentButton}"
-                              Click="EditHoliday_OnClick"
-                              CommandParameter="{Binding}">
-                        <ci:FluentIcon Glyph="&#xE70F;" />
-                      </Button>
-                      <Button Grid.Column="2" Margin="4 0"
-                              Theme="{StaticResource TransparentButton}"
-                              Click="DeleteHoliday_OnClick"
-                              CommandParameter="{Binding}">
-                        <ci:FluentIcon Glyph="&#xE74D;" />
-                      </Button>
-                    </Grid>
-                  </Border>
-                </DataTemplate>
-              </ListBox.ItemTemplate>
-            </ListBox>
-          </ScrollViewer>
-        </Border>
-        <Button Grid.Row="2" Margin="0 8 0 0" HorizontalAlignment="Left"
-                Name="BtnAddHoliday" Click="BtnAddHoliday_OnClick">
-          <ci:IconText Glyph="&#xE710;" Text="添加节假日" />
-        </Button>
-      </Grid>
-    </Grid>
-  </Grid>
+      <ci:IconText Glyph="&#xE9B0;" Text="节假日" Margin="0 0 0 4" />
+      <Border BorderBrush="{DynamicResource CardBorderBrush}"
+              BorderThickness="1" CornerRadius="4" Margin="0 0 0 8">
+        <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto">
+          <ListBox Name="HolidayList" BorderThickness="0"
+                   ItemsSource="{Binding Holidays}">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Border BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="0 0 0 1" Padding="8 6">
+                  <Grid ColumnDefinitions="*,Auto,Auto">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                      <TextBlock Text="{Binding Date, StringFormat={}{0:yyyy-MM-dd}}"
+                                 Width="100" />
+                      <TextBlock Text="{Binding Name}" FontWeight="Bold"
+                                 Margin="0 0 8 0" />
+                      <TextBlock Text="{Binding Description}" Opacity="0.6" />
+                    </StackPanel>
+                    <Button Grid.Column="1" Margin="4 0"
+                            Theme="{StaticResource TransparentButton}"
+                            Click="EditHoliday_OnClick"
+                            CommandParameter="{Binding}">
+                      <ci:FluentIcon Glyph="&#xE70F;" />
+                    </Button>
+                    <Button Grid.Column="2" Margin="4 0"
+                            Theme="{StaticResource TransparentButton}"
+                            Click="DeleteHoliday_OnClick"
+                            CommandParameter="{Binding}">
+                      <ci:FluentIcon Glyph="&#xE74D;" />
+                    </Button>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </ScrollViewer>
+      </Border>
+      <Button HorizontalAlignment="Left" Margin="0 0 0 12"
+              Name="BtnAddHoliday" Click="BtnAddHoliday_OnClick">
+        <ci:IconText Glyph="&#xE710;" Text="添加节假日" />
+      </Button>
+    </StackPanel>
+  </ScrollViewer>
 </ci:SettingsPageBase>

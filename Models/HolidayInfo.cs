@@ -21,4 +21,7 @@ public class HolidayInfo
 
     [JsonPropertyName("isDayOff")]
     public bool IsDayOff { get; set; }
+
+    [JsonPropertyName("targetHoliday")]
+    public string? TargetHolidayName { get; set; }
 }
