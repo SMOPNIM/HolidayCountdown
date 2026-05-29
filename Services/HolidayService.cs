@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Shared;
 using HolidayCountdown.Models;
@@ -419,6 +420,8 @@ public class HolidayService
     private class TimorTechResponse
     {
         public int Code { get; set; }
+
+        [JsonPropertyName("holiday")]
         public Dictionary<string, TimorTechDayInfo>? Data { get; set; }
     }
 
