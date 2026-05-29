@@ -59,6 +59,26 @@
         </fluent:SettingsExpander>
 
         <TextBlock Name="StatusText" FontSize="12" Opacity="0.6" Margin="0 0 0 8" />
+
+        <fluent:SettingsExpander IconSource="{ci:FluentIconSource &#xE7C1;}"
+                                 Header="调休临时层"
+                                 Description="在调休上班日自动创建临时层课表。"
+                                 IsExpanded="True">
+          <fluent:SettingsExpander.Footer>
+            <ToggleSwitch Name="AutoTempLayerToggle"
+                          OnContent="开启" OffContent="关闭"
+                          IsChecked="{Binding EnableAutoTempLayer, Mode=TwoWay}" />
+          </fluent:SettingsExpander.Footer>
+          <fluent:SettingsExpanderItem Content="源课表 ID（可选）"
+                                       Description="留空将自动选择第一个启用的课表">
+            <fluent:SettingsExpanderItem.Footer>
+              <TextBox Name="SourcePlanIdBox" Width="280"
+                       Watermark="00000000-0000-0000-0000-000000000000"
+                       TextChanged="SourcePlanIdBox_OnTextChanged" />
+            </fluent:SettingsExpanderItem.Footer>
+          </fluent:SettingsExpanderItem>
+        </fluent:SettingsExpander>
+
         <Separator Margin="0 8 0 4" />
       </StackPanel>
 

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Media;
 using ClassIsland.Core.Abstractions.Controls;
@@ -26,6 +27,18 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
         }
     }
 
+    public bool EnableAutoTempLayer
+    {
+        get => HolidayService.Settings.EnableAutoTempLayer;
+        set
+        {
+            HolidayService.Settings.EnableAutoTempLayer = value;
+            HolidayService.SaveSettings();
+            if (value)
+                HolidayService.ApplyAutoTempLayers();
+        }
+    }
+
     public HolidayDataSettingsPage(HolidayService holidayService)
     {
         HolidayService = holidayService;
@@ -48,6 +61,7 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
         var s = HolidayService.Settings;
         GitHubUrlBox.Text = s.GitHubUrl;
         ApiUrlBox.Text = s.ApiUrl;
+        SourcePlanIdBox.Text = s.DayOffSourcePlanId?.ToString() ?? "";
         UpdateStatusText();
     }
 
@@ -65,6 +79,16 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
     {
         HolidayService.Settings.GitHubUrl = GitHubUrlBox.Text ?? "";
         HolidayService.Settings.ApiUrl = ApiUrlBox.Text ?? "";
+        HolidayService.SaveSettings();
+    }
+
+    private void SourcePlanIdBox_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        var text = SourcePlanIdBox.Text?.Trim();
+        if (Guid.TryParse(text, out var guid) && guid != Guid.Empty)
+            HolidayService.Settings.DayOffSourcePlanId = guid;
+        else
+            HolidayService.Settings.DayOffSourcePlanId = null;
         HolidayService.SaveSettings();
     }
 
@@ -88,6 +112,7 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
             await HolidayService.RefreshFromRemoteAsync();
             LoadHolidays();
             UpdateStatusText();
+            HolidayService.ApplyAutoTempLayers();
         }
         catch (Exception ex)
         {

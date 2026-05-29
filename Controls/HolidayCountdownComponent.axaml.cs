@@ -58,6 +58,7 @@ public partial class HolidayCountdownComponent : ComponentBase<HolidayCountdownS
         {
             UpdateContent();
             ApplyVisualSettings();
+            HolidayService.ApplyAutoTempLayers();
             Settings.PropertyChanged += OnSettingsPropertyChanged;
             LessonsService.PostMainTimerTicked += OnTimerTick;
         };

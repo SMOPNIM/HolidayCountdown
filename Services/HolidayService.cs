@@ -1,5 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
+using ClassIsland.Core.Abstractions.Services;
+using ClassIsland.Shared;
 using HolidayCountdown.Models;
 
 namespace HolidayCountdown.Services;
@@ -149,15 +151,17 @@ public class HolidayService
 
             foreach (var (dateStr, info) in parsed.Data)
             {
-                if (info?.Holiday != true) continue;
+                if (info == null) continue;
                 if (!DateTime.TryParse(dateStr, out var date)) continue;
 
+                var isDayOff = !info.Holiday;
                 holidays.Add(new HolidayInfo
                 {
                     Id = $"timor_{dateStr}",
                     Name = info.Name ?? "节假日",
                     Date = date,
-                    Description = "来自 timor.tech API"
+                    Description = isDayOff ? "调休补班" : "来自 timor.tech API",
+                    IsDayOff = isDayOff
                 });
             }
         }
@@ -276,7 +280,7 @@ public class HolidayService
 
     private static bool HasDifferences(HolidayInfo a, HolidayInfo b)
     {
-        return a.Date != b.Date || a.Name != b.Name || a.Description != b.Description;
+        return a.Date != b.Date || a.Name != b.Name || a.Description != b.Description || a.IsDayOff != b.IsDayOff;
     }
 
     private void SaveCache()
@@ -325,6 +329,42 @@ public class HolidayService
             new() { Id = "mid_autumn_2028", Name = "中秋节", Date = new DateTime(2028, 10, 3), IsLunarBased = true, Description = "农历八月十五" },
             new() { Id = "national_day_2028", Name = "国庆节", Date = new DateTime(2028, 10, 1), Description = "10月1日" },
         };
+    }
+
+    public void ApplyAutoTempLayers()
+    {
+        if (!_settings.EnableAutoTempLayer) return;
+
+        var profileService = IAppHost.TryGetService<IProfileService>();
+        if (profileService == null) return;
+
+        var today = DateTime.Today;
+        var dayOffs = _holidays
+            .Where(h => h.IsDayOff && h.Date >= today)
+            .ToList();
+
+        if (dayOffs.Count == 0) return;
+
+        foreach (var dayOff in dayOffs)
+        {
+            Guid? sourceGuid = _settings.DayOffSourcePlanId;
+            if (sourceGuid == null || sourceGuid == Guid.Empty)
+            {
+                sourceGuid = FindSourcePlanId(profileService, dayOff.Date);
+            }
+
+            if (sourceGuid != null && sourceGuid != Guid.Empty)
+            {
+                profileService.CreateTempClassPlan(sourceGuid.Value, enableDateTime: dayOff.Date);
+            }
+        }
+    }
+
+    private static Guid? FindSourcePlanId(IProfileService profileService, DateTime dayOffDate)
+    {
+        var orderedPlan = profileService.Profile.ClassPlans
+            .FirstOrDefault(x => !x.Value.IsOverlay && x.Value.IsEnabled);
+        return orderedPlan.Value != null ? orderedPlan.Key : null;
     }
 
     private class HolidayDataWrapper

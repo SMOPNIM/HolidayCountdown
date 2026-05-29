@@ -26,4 +26,10 @@ public class PluginSettings
 
     [JsonPropertyName("customHolidays")]
     public List<HolidayInfo> CustomHolidays { get; set; } = new();
+
+    [JsonPropertyName("enableAutoTempLayer")]
+    public bool EnableAutoTempLayer { get; set; } = false;
+
+    [JsonPropertyName("dayOffSourcePlanId")]
+    public Guid? DayOffSourcePlanId { get; set; }
 }
