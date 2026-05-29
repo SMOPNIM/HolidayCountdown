@@ -17,7 +17,8 @@
       <ci:IconText Glyph="&#xE943;" Text="数据源" Margin="0 0 0 4" />
       <fluent:SettingsExpander IconSource="{ci:FluentIconSource &#xE943;}"
                                Header="节假日数据源"
-                               Description="选择获取节假日数据的远程来源。">
+                               Description="选择获取节假日数据的远程来源。"
+                               IsExpanded="True">
         <fluent:SettingsExpander.Footer>
           <ComboBox Name="DataSourceCombo"
                     SelectedIndex="{Binding DataSourceIndex, Mode=TwoWay}"
@@ -28,9 +29,6 @@
             <ComboBoxItem>Both（API优先）</ComboBoxItem>
           </ComboBox>
         </fluent:SettingsExpander.Footer>
-      </fluent:SettingsExpander>
-
-      <fluent:SettingsExpander IconSource="{ci:FluentIconSource &#xE943;}">
         <fluent:SettingsExpanderItem Content="GitHub URL">
           <fluent:SettingsExpanderItem.Footer>
             <TextBox Name="GitHubUrlBox" Width="300"
