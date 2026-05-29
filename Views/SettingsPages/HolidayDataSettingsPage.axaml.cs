@@ -162,7 +162,7 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
         };
         var datePicker = new CalendarDatePicker
         {
-            SelectedDate = existing?.Date
+            SelectedDate = existing?.Date ?? DateTime.Today
         };
         var idBox = new TextBox
         {
