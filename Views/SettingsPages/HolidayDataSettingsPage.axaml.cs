@@ -39,6 +39,16 @@ public partial class HolidayDataSettingsPage : SettingsPageBase
         }
     }
 
+    public bool ShowDayOffInCountdown
+    {
+        get => HolidayService.Settings.ShowDayOffInCountdown;
+        set
+        {
+            HolidayService.Settings.ShowDayOffInCountdown = value;
+            HolidayService.SaveSettings();
+        }
+    }
+
     public HolidayDataSettingsPage(HolidayService holidayService)
     {
         HolidayService = holidayService;

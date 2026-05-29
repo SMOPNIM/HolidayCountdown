@@ -37,7 +37,7 @@ public class HolidayService
     public HolidayInfo? GetNextHoliday(DateTime now)
     {
         return _holidays
-            .Where(h => !h.IsDayOff && h.Date > now)
+            .Where(h => (_settings.ShowDayOffInCountdown || !h.IsDayOff) && h.Date > now)
             .OrderBy(h => h.Date)
             .FirstOrDefault();
     }
@@ -45,7 +45,7 @@ public class HolidayService
     public HolidayInfo? GetPreviousHoliday(DateTime now)
     {
         return _holidays
-            .Where(h => !h.IsDayOff && h.Date < now)
+            .Where(h => (_settings.ShowDayOffInCountdown || !h.IsDayOff) && h.Date < now)
             .OrderByDescending(h => h.Date)
             .FirstOrDefault();
     }

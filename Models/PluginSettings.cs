@@ -32,4 +32,7 @@ public class PluginSettings
 
     [JsonPropertyName("dayOffSourcePlanId")]
     public Guid? DayOffSourcePlanId { get; set; }
+
+    [JsonPropertyName("showDayOffInCountdown")]
+    public bool ShowDayOffInCountdown { get; set; } = false;
 }

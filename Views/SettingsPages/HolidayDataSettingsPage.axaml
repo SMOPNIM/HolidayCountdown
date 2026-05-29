@@ -77,6 +77,13 @@
                        TextChanged="SourcePlanIdBox_OnTextChanged" />
             </fluent:SettingsExpanderItem.Footer>
           </fluent:SettingsExpanderItem>
+          <fluent:SettingsExpanderItem Content="倒计时显示调休补班"
+                                       Description="开启后组件将调休补班日纳入倒计时">
+            <fluent:SettingsExpanderItem.Footer>
+              <ToggleSwitch OnContent="开启" OffContent="关闭"
+                            IsChecked="{Binding ShowDayOffInCountdown, Mode=TwoWay}" />
+            </fluent:SettingsExpanderItem.Footer>
+          </fluent:SettingsExpanderItem>
         </fluent:SettingsExpander>
 
         <Separator Margin="0 8 0 4" />
