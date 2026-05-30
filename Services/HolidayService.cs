@@ -80,13 +80,13 @@ public class HolidayService
         var source = _settings.DataSource;
         List<HolidayInfo>? remoteHolidays = null;
 
-        if (source == DataSourceType.GitHub || source == DataSourceType.Both)
+        if (source == DataSourceType.Api || source == DataSourceType.Both)
         {
-            if (!string.IsNullOrWhiteSpace(_settings.GitHubUrl))
+            if (!string.IsNullOrWhiteSpace(_settings.ApiUrl))
             {
                 try
                 {
-                    remoteHolidays = await FetchFromGitHubAsync();
+                    remoteHolidays = await FetchFromApiAsync();
                 }
                 catch
                 {
@@ -95,13 +95,13 @@ public class HolidayService
             }
         }
 
-        if (remoteHolidays == null && (source == DataSourceType.Api || source == DataSourceType.Both))
+        if (remoteHolidays == null && (source == DataSourceType.GitHub || source == DataSourceType.Both))
         {
-            if (!string.IsNullOrWhiteSpace(_settings.ApiUrl))
+            if (!string.IsNullOrWhiteSpace(_settings.GitHubUrl))
             {
                 try
                 {
-                    remoteHolidays = await FetchFromApiAsync();
+                    remoteHolidays = await FetchFromGitHubAsync();
                 }
                 catch
                 {
@@ -150,15 +150,15 @@ public class HolidayService
             var parsed = JsonSerializer.Deserialize<TimorTechResponse>(json);
             if (parsed?.Data == null) continue;
 
-            foreach (var (dateStr, info) in parsed.Data)
+            foreach (var (_, info) in parsed.Data)
             {
-                if (info == null) continue;
-                if (!DateTime.TryParse(dateStr, out var date)) continue;
+                if (info == null || string.IsNullOrWhiteSpace(info.Date)) continue;
+                if (!DateTime.TryParse(info.Date, out var date)) continue;
 
                 var isDayOff = !info.Holiday;
                 holidays.Add(new HolidayInfo
                 {
-                    Id = $"timor_{dateStr}",
+                    Id = $"timor_{info.Date}",
                     Name = info.Name ?? "节假日",
                     Date = date,
                     Description = isDayOff ? "调休补班" : "来自 timor.tech API",
@@ -173,13 +173,16 @@ public class HolidayService
 
     private void MergeRemoteHolidays(List<HolidayInfo> remote)
     {
+        if (remote.Count == 0) return;
+
+        var minYear = remote.Min(h => h.Date.Year);
+        var maxYear = remote.Max(h => h.Date.Year);
+
+        _holidays.RemoveAll(h => h.Date.Year >= minYear && h.Date.Year <= maxYear);
+
         foreach (var remoteHoliday in remote)
         {
-            var idx = _holidays.FindIndex(h => h.Id == remoteHoliday.Id);
-            if (idx >= 0)
-                _holidays[idx] = remoteHoliday;
-            else
-                _holidays.Add(remoteHoliday);
+            _holidays.Add(remoteHoliday);
         }
     }
 
