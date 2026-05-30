@@ -430,9 +430,13 @@ public class HolidayService
 
     private class TimorTechDayInfo
     {
+        [JsonPropertyName("holiday")]
         public bool Holiday { get; set; }
+        [JsonPropertyName("name")]
         public string? Name { get; set; }
+        [JsonPropertyName("date")]
         public string? Date { get; set; }
+        [JsonPropertyName("target")]
         public string? Target { get; set; }
     }
 }
